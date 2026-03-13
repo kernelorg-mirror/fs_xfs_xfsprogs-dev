@@ -132,6 +132,9 @@ report_rginfo(
 	printf(_("Checked: 0x%x\n"),	rgeo.rg_checked);
 	printf(_("Flags: 0x%x\n"),	rgeo.rg_flags);
 
+	if (rgeo.rg_flags & XFS_RTGROUP_GEOM_WRITEPOINTER)
+		printf(_("Writepointer: 0x%u\n"), rgeo.rg_writepointer);
+
 	return 0;
 }
 
