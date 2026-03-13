@@ -23,7 +23,8 @@ struct xfs_rtgroup_geometry {
 	__u32  rg_sick;
 	__u32  rg_checked;
 	__u32  rg_flags;
-	__u32  rg_reserved[27];
+	__u32  rg_writepointer;
+	__u32  rg_reserved[26];
 };
 .fi
 .in
@@ -38,6 +39,11 @@ filesystem blocks.
 .I rg_flags
 The caller can set this field to change the operational behavior of the ioctl.
 Currently no flags are defined, so this field must be zero.
+.TP
+.I rg_writepointer
+For zoned devices, return the writepointer block offset into the respective
+realtime group. This field is valid only if the XFS_RTGROUP_GEOM_WRITEPOINTER
+flag is set in rg_flags.
 .TP
 .IR rg_reserved " and " rg_pad
 All reserved fields will be set to zero on return.
