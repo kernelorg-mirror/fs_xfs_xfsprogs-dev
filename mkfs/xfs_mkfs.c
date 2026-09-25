@@ -5741,7 +5741,7 @@ rewrite_secondary_superblocks(
 	int			error;
 
 	/* rewrite the last superblock */
-	error = -libxfs_buf_read(mp->m_dev,
+	error = -libxfs_buf_read(mp->m_ddev_targp,
 			XFS_AGB_TO_DADDR(mp, mp->m_sb.sb_agcount - 1,
 				XFS_SB_DADDR),
 			XFS_FSS_TO_BB(mp, 1), 0, &buf, &xfs_sb_buf_ops);
@@ -5761,7 +5761,7 @@ rewrite_secondary_superblocks(
 	if (mp->m_sb.sb_agcount <= 2)
 		return;
 
-	error = -libxfs_buf_read(mp->m_dev,
+	error = -libxfs_buf_read(mp->m_ddev_targp,
 			XFS_AGB_TO_DADDR(mp, (mp->m_sb.sb_agcount - 1) / 2,
 				XFS_SB_DADDR),
 			XFS_FSS_TO_BB(mp, 1), 0, &buf, &xfs_sb_buf_ops);

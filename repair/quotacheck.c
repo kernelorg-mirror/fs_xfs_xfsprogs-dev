@@ -369,7 +369,7 @@ qc_walk_dquot_extent(
 		unsigned int	dqnr;
 		uint64_t	dqid;
 
-		error = -libxfs_buf_read(mp->m_dev,
+		error = -libxfs_buf_read(mp->m_ddev_targp,
 				XFS_FSB_TO_DADDR(mp, map->br_startblock + bno),
 				dqchunklen, 0, &bp, &xfs_dquot_buf_ops);
 		if (error) {

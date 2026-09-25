@@ -43,9 +43,9 @@ check_aginode_block(
 	 * tree and we wouldn't be here and we stale the buffers out
 	 * so no one else will overlap them.
 	 */
-	error = -libxfs_buf_read(mp->m_dev, XFS_AGB_TO_DADDR(mp, agno, agbno),
-			XFS_FSB_TO_BB(mp, 1), LIBXFS_READBUF_SALVAGE, &bp,
-			NULL);
+	error = -libxfs_buf_read(mp->m_ddev_targp,
+			XFS_AGB_TO_DADDR(mp, agno, agbno), XFS_FSB_TO_BB(mp, 1),
+			LIBXFS_READBUF_SALVAGE, &bp, NULL);
 	if (error) {
 		do_warn(_("cannot read agbno (%u/%u), disk block %" PRId64 "\n"),
 			agno, agbno, XFS_AGB_TO_DADDR(mp, agno, agbno));
@@ -699,7 +699,7 @@ process_inode_chunk(
 		pftrace("about to read off %llu in AG %d",
 			XFS_AGB_TO_DADDR(mp, agno, agbno), agno);
 
-		error = -libxfs_buf_read(mp->m_dev,
+		error = -libxfs_buf_read(mp->m_ddev_targp,
 				XFS_AGB_TO_DADDR(mp, agno, agbno),
 				XFS_FSB_TO_BB(mp,
 					M_IGEO(mp)->blocks_per_cluster),

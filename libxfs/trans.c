@@ -500,7 +500,7 @@ libxfs_trans_getsb(
 	if (tp == NULL)
 		return libxfs_getsb(mp);
 
-	bp = xfs_trans_buf_item_match(tp, mp->m_dev, &map, 1);
+	bp = xfs_trans_buf_item_match(tp, mp->m_ddev_targp, &map, 1);
 	if (bp != NULL) {
 		ASSERT(bp->b_transp == tp);
 		bip = bp->b_log_item;
@@ -529,7 +529,7 @@ libxfs_trans_getrtsb(
 	int			len = XFS_FSS_TO_BB(mp, 1);
 	DEFINE_SINGLE_BUF_MAP(map, XFS_SB_DADDR, len);
 
-	bp = xfs_trans_buf_item_match(tp, mp->m_rtdev, &map, 1);
+	bp = xfs_trans_buf_item_match(tp, mp->m_rtdev_targp, &map, 1);
 	if (bp != NULL) {
 		ASSERT(bp->b_transp == tp);
 		bip = bp->b_log_item;

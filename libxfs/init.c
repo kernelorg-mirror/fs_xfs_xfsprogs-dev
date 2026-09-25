@@ -330,7 +330,7 @@ rtmount_init(
 			(unsigned long long) mp->m_sb.sb_rblocks);
 		return -1;
 	}
-	error = libxfs_buf_read(mp->m_rtdev, d - XFS_FSB_TO_BB(mp, 1),
+	error = libxfs_buf_read(mp->m_rtdev_targp, d - XFS_FSB_TO_BB(mp, 1),
 			XFS_FSB_TO_BB(mp, 1), 0, &bp, NULL);
 	if (error) {
 		fprintf(stderr, _("%s: realtime size check failed\n"),
@@ -687,7 +687,7 @@ check_many_rtgroups(
 	xfs_daddr_t		d;
 	int			error;
 
-	if (!mp->m_rtdev->bt_bdev) {
+	if (!mp->m_rtdev_targp->bt_bdev) {
 		fprintf(stderr, _("%s: no rt device, ignoring rgcount %u\n"),
 				progname, sbp->sb_rgcount);
 		if (!xfs_is_debugger(mp))
@@ -698,8 +698,8 @@ check_many_rtgroups(
 	}
 
 	d = (xfs_daddr_t)XFS_FSB_TO_BB(mp, mp->m_sb.sb_rblocks);
-	error = libxfs_buf_read(mp->m_rtdev, d - XFS_FSB_TO_BB(mp, 1), 1, 0,
-			&bp, NULL);
+	error = libxfs_buf_read(mp->m_rtdev_targp, d - XFS_FSB_TO_BB(mp, 1), 1,
+			0, &bp, NULL);
 	if (!error) {
 		libxfs_buf_relse(bp);
 		return true;
@@ -815,7 +815,7 @@ libxfs_mount(
 		return mp;
 
 	/* device size checks must pass unless we're a debugger. */
-	error = libxfs_buf_read(mp->m_dev, d - XFS_FSS_TO_BB(mp, 1),
+	error = libxfs_buf_read(mp->m_ddev_targp, d - XFS_FSS_TO_BB(mp, 1),
 			XFS_FSS_TO_BB(mp, 1), 0, &bp, NULL);
 	if (error) {
 		fprintf(stderr, _("%s: data size check failed\n"), progname);
@@ -857,7 +857,7 @@ libxfs_mount(
 	 * read the first one and let the user know to check the geometry.
 	 */
 	if (sbp->sb_agcount > 1000000) {
-		error = libxfs_buf_read(mp->m_dev,
+		error = libxfs_buf_read(mp->m_ddev_targp,
 				XFS_AG_DADDR(mp, sbp->sb_agcount - 1, 0), 1,
 				0, &bp, NULL);
 		if (error) {

@@ -102,9 +102,6 @@ typedef struct xfs_mount {
 	struct xfs_buftarg	*m_ddev_targp;
 	struct xfs_buftarg	*m_logdev_targp;
 	struct xfs_buftarg	*m_rtdev_targp;
-#define m_dev		m_ddev_targp
-#define m_logdev	m_logdev_targp
-#define m_rtdev		m_rtdev_targp
 	uint8_t			m_dircook_elog;	/* log d-cookie entry bits */
 	uint8_t			m_blkbit_log;	/* blocklog + NBBY */
 	uint8_t			m_blkbb_log;	/* blocklog - BBSHIFT */

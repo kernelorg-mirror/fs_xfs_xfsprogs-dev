@@ -135,7 +135,7 @@ build_agi(
 	int			i;
 	int			error;
 
-	error = -libxfs_buf_get(mp->m_dev,
+	error = -libxfs_buf_get(mp->m_ddev_targp,
 			XFS_AG_DADDR(mp, agno, XFS_AGI_DADDR(mp)),
 			mp->m_sb.sb_sectsize / BBSIZE, &agi_buf);
 	if (error)
@@ -228,7 +228,7 @@ build_agf_agfl(
 	__be32			*freelist;
 	int			error;
 
-	error = -libxfs_buf_get(mp->m_dev,
+	error = -libxfs_buf_get(mp->m_ddev_targp,
 			XFS_AG_DADDR(mp, agno, XFS_AGF_DADDR(mp)),
 			mp->m_sb.sb_sectsize / BBSIZE, &agf_buf);
 	if (error)
@@ -314,7 +314,7 @@ build_agf_agfl(
 		platform_uuid_copy(&agf->agf_uuid, &mp->m_sb.sb_meta_uuid);
 
 	/* initialise the AGFL, then fill it if there are blocks left over. */
-	error = -libxfs_buf_get(mp->m_dev,
+	error = -libxfs_buf_get(mp->m_ddev_targp,
 			XFS_AG_DADDR(mp, agno, XFS_AGFL_DADDR(mp)),
 			mp->m_sb.sb_sectsize / BBSIZE, &agfl_buf);
 	if (error)

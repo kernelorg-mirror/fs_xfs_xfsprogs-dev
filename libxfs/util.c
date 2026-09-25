@@ -527,7 +527,7 @@ libxfs_file_write(
 		    map.br_state == XFS_EXT_UNWRITTEN)
 			return -EINVAL;
 
-		error = libxfs_buf_get(mp->m_dev,
+		error = libxfs_buf_get(mp->m_ddev_targp,
 				XFS_FSB_TO_DADDR(mp, map.br_startblock),
 				XFS_FSB_TO_BB(mp, map.br_blockcount),
 				&bp);

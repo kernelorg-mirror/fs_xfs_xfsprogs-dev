@@ -255,7 +255,7 @@ check_rtfile_contents(
 			break;
 		}
 
-		error = -libxfs_buf_read_uncached(mp->m_dev,
+		error = -libxfs_buf_read_uncached(mp->m_ddev_targp,
 				XFS_FSB_TO_DADDR(mp, map.br_startblock),
 				XFS_FSB_TO_BB(mp, 1), 0, &bp,
 				xfs_rtblock_ops(mp, type));

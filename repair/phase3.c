@@ -30,7 +30,7 @@ process_agi_unlinked(
 	int			agi_dirty = 0;
 	int			error;
 
-	error = -libxfs_buf_read(mp->m_dev,
+	error = -libxfs_buf_read(mp->m_ddev_targp,
 			XFS_AG_DADDR(mp, agno, XFS_AGI_DADDR(mp)),
 			mp->m_sb.sb_sectsize / BBSIZE, LIBXFS_READBUF_SALVAGE,
 			&bp, &xfs_agi_buf_ops);

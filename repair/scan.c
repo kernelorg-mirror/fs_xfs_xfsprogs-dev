@@ -102,8 +102,9 @@ scan_sbtree(
 	struct xfs_buf	*bp;
 	int		error;
 
-	error = salvage_buffer(mp->m_dev, XFS_AGB_TO_DADDR(mp, agno, root),
-			XFS_FSB_TO_BB(mp, 1), &bp, ops);
+	error = salvage_buffer(mp->m_ddev_targp,
+			XFS_AGB_TO_DADDR(mp, agno, root),XFS_FSB_TO_BB(mp, 1),
+			&bp, ops);
 	if (error) {
 		do_error(_("can't read btree block %d/%d\n"), agno, root);
 		return;
@@ -161,7 +162,7 @@ scan_lbtree(
 	int		dirty = 0;
 	bool		badcrc = false;
 
-	err = salvage_buffer(mp->m_dev, XFS_FSB_TO_DADDR(mp, root),
+	err = salvage_buffer(mp->m_ddev_targp, XFS_FSB_TO_DADDR(mp, root),
 			XFS_FSB_TO_BB(mp, 1), &bp, ops);
 	if (err) {
 		do_error(_("can't read btree block %d/%d\n"),
@@ -3030,7 +3031,7 @@ scan_freelist(
 	if (be32_to_cpu(agf->agf_flcount) == 0)
 		return;
 
-	error = salvage_buffer(mp->m_dev,
+	error = salvage_buffer(mp->m_ddev_targp,
 			XFS_AG_DADDR(mp, agno, XFS_AGFL_DADDR(mp)),
 			XFS_FSS_TO_BB(mp, 1), &agflbuf, &xfs_agfl_buf_ops);
 	if (error) {
@@ -3312,7 +3313,8 @@ scan_ag(
 		return;
 	}
 
-	error = salvage_buffer(mp->m_dev, XFS_AG_DADDR(mp, agno, XFS_SB_DADDR),
+	error = salvage_buffer(mp->m_ddev_targp,
+			XFS_AG_DADDR(mp, agno, XFS_SB_DADDR),
 			XFS_FSS_TO_BB(mp, 1), &sbbuf, &xfs_sb_buf_ops);
 	if (error) {
 		objname = _("root superblock");
@@ -3322,7 +3324,7 @@ scan_ag(
 		do_warn(_("superblock has bad CRC for ag %d\n"), agno);
 	libxfs_sb_from_disk(sb, sbbuf->b_addr);
 
-	error = salvage_buffer(mp->m_dev,
+	error = salvage_buffer(mp->m_ddev_targp,
 			XFS_AG_DADDR(mp, agno, XFS_AGF_DADDR(mp)),
 			XFS_FSS_TO_BB(mp, 1), &agfbuf, &xfs_agf_buf_ops);
 	if (error) {
@@ -3333,7 +3335,7 @@ scan_ag(
 		do_warn(_("agf has bad CRC for ag %d\n"), agno);
 	agf = agfbuf->b_addr;
 
-	error = salvage_buffer(mp->m_dev,
+	error = salvage_buffer(mp->m_ddev_targp,
 			XFS_AG_DADDR(mp, agno, XFS_AGI_DADDR(mp)),
 			XFS_FSS_TO_BB(mp, 1), &agibuf, &xfs_agi_buf_ops);
 	if (error) {

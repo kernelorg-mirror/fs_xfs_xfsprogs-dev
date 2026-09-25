@@ -443,9 +443,10 @@ rmtval_get(xfs_mount_t *mp, xfs_ino_t ino, blkmap_t *blkmap,
 			clearit = 1;
 			break;
 		}
-		error = -libxfs_buf_read(mp->m_dev, XFS_FSB_TO_DADDR(mp, bno),
-				XFS_FSB_TO_BB(mp, 1), LIBXFS_READBUF_SALVAGE,
-				&bp, &xfs_attr3_rmt_buf_ops);
+		error = -libxfs_buf_read(mp->m_ddev_targp,
+				XFS_FSB_TO_DADDR(mp, bno), XFS_FSB_TO_BB(mp, 1),
+				LIBXFS_READBUF_SALVAGE, &bp,
+				&xfs_attr3_rmt_buf_ops);
 		if (error) {
 			do_warn(
 	_("can't read remote block for attributes of inode %" PRIu64 "\n"), ino);
@@ -879,7 +880,7 @@ process_leaf_attr_level(xfs_mount_t	*mp,
 			goto error_out;
 		}
 
-		error = -libxfs_buf_read(mp->m_dev,
+		error = -libxfs_buf_read(mp->m_ddev_targp,
 				XFS_FSB_TO_DADDR(mp, dev_bno),
 				XFS_FSB_TO_BB(mp, 1), LIBXFS_READBUF_SALVAGE,
 				&bp, &xfs_attr3_leaf_buf_ops);
@@ -1217,7 +1218,7 @@ process_longform_attr(
 		return 1;
 	}
 
-	error = -libxfs_buf_read(mp->m_dev, XFS_FSB_TO_DADDR(mp, bno),
+	error = -libxfs_buf_read(mp->m_ddev_targp, XFS_FSB_TO_DADDR(mp, bno),
 			XFS_FSB_TO_BB(mp, 1), LIBXFS_READBUF_SALVAGE, &bp,
 			&xfs_da3_node_buf_ops);
 	if (error) {

@@ -121,7 +121,7 @@ pf_queue_io(
 	 * the lock holder is either reading it from disk himself or
 	 * completely overwriting it this behaviour is perfectly fine.
 	 */
-	error = -libxfs_buf_get_map(mp->m_dev, map, nmaps,
+	error = -libxfs_buf_get_map(mp->m_ddev_targp, map, nmaps,
 			LIBXFS_GETBUF_TRYLOCK, &bp);
 	if (error)
 		return;
@@ -275,7 +275,7 @@ pf_scan_lbtree(
 	int			rc;
 	int			error;
 
-	error = -libxfs_buf_read(mp->m_dev, XFS_FSB_TO_DADDR(mp, dbno),
+	error = -libxfs_buf_read(mp->m_ddev_targp, XFS_FSB_TO_DADDR(mp, dbno),
 			XFS_FSB_TO_BB(mp, 1), LIBXFS_READBUF_SALVAGE, &bp,
 			&xfs_bmbt_buf_ops);
 	if (error)
