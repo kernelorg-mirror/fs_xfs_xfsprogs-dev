@@ -643,7 +643,7 @@ rdump_regfile_data(
 
 		fd_pos = XFS_FSB_TO_B(mp, irec.br_startoff);
 		if (XFS_IS_REALTIME_INODE(ip))
-			daddr =  xfs_rtb_to_daddr(mp, irec.br_startblock);
+			daddr = xfs_rtb_to_daddr(mp, irec.br_startblock);
 		else
 			daddr = XFS_FSB_TO_DADDR(mp, irec.br_startblock);
 
