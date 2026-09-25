@@ -79,16 +79,24 @@ cache_init(
 	return cache;
 }
 
-static void
+/* Double the cache size limit; return false if it would overflow. */
+static bool
 cache_expand(
 	struct cache *		cache)
 {
+	bool			expanded = false;
+
 	pthread_mutex_lock(&cache->c_mutex);
+	if (cache->c_maxcount <= UINT_MAX / 2) {
 #ifdef CACHE_DEBUG
-	fprintf(stderr, "doubling cache size to %u\n", 2 * cache->c_maxcount);
+		fprintf(stderr, "doubling cache size to %u\n",
+				2 * cache->c_maxcount);
 #endif
-	cache->c_maxcount *= 2;
+		cache->c_maxcount *= 2;
+		expanded = true;
+	}
 	pthread_mutex_unlock(&cache->c_mutex);
+	return expanded;
 }
 
 void
@@ -375,7 +383,8 @@ __cache_node_purge(
  * Otherwise, we allocate a new node, taking care not to expand the
  * cache beyond the requested maximum size (shrink it if it would).
  * Returns zero if hit in cache, one if a new node was allocated.  Returns
- * -ENOMEM if allocation fails after cache shaking is exhausted.
+ * -ENOMEM if allocation fails after cache shaking is exhausted, or if the
+ * cache cannot be expanded further without overflowing.
  */
 int
 cache_node_get(
@@ -485,8 +494,9 @@ next_object:
 			 */
 			if (error < 0)
 				return error;
+			if (!cache_expand(cache))
+				return -ENOMEM;
 			priority = 0;
-			cache_expand(cache);
 		}
 	}
 
