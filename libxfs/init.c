@@ -554,8 +554,7 @@ libxfs_buftarg_reinit(
 	}
 
 	if (mp->m_rtdev_targp && mp->m_rtdev_targp != mp->m_ddev_targp) {
-		if ((xi->rt.dev && xi->rt.dev == xi->data.dev) ||
-		    mp->m_rtdev_targp->bt_bdev != xi->rt.dev ||
+		if (mp->m_rtdev_targp->bt_bdev != xi->rt.dev ||
 		    mp->m_rtdev_targp->bt_mount != mp) {
 			fprintf(stderr,
 				_("%s: bad buftarg reinit, rtdev\n"),
@@ -587,10 +586,6 @@ libxfs_buftarg_init(
 		mp->m_logdev_targp = mp->m_ddev_targp;
 	else
 		mp->m_logdev_targp = libxfs_buftarg_alloc(mp, xi, &xi->log);
-	if (!xi->rt.dev || xi->rt.dev == xi->data.dev)
-		mp->m_rtdev_targp = mp->m_ddev_targp;
-	else
-		mp->m_rtdev_targp = libxfs_buftarg_alloc(mp, xi, &xi->rt);
 }
 
 /* Compute maximum possible height for per-AG btree types for this fs. */
@@ -739,6 +734,10 @@ libxfs_mount(
 	if (flags & LIBXFS_MOUNT_REPORT_CORRUPTION)
 		xfs_set_reporting_corruption(mp);
 	libxfs_buftarg_init(mp, xi);
+	if (sb->sb_rtstart)
+		mp->m_rtdev_targp = mp->m_ddev_targp;
+	else if (xi->rt.dev)
+		mp->m_rtdev_targp = libxfs_buftarg_alloc(mp, xi, &xi->rt);
 	libxfs_setup_write_error_injection(mp);
 
 	if (xi->data.name)
