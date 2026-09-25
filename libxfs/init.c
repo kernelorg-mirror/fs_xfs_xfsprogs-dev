@@ -445,8 +445,7 @@ static struct xfs_buftarg *
 libxfs_buftarg_alloc(
 	struct xfs_mount	*mp,
 	struct libxfs_init	*xi,
-	struct libxfs_dev	*dev,
-	unsigned long		write_fails)
+	struct libxfs_dev	*dev)
 {
 	struct xfs_buftarg	*btp;
 
@@ -461,10 +460,6 @@ libxfs_buftarg_alloc(
 	btp->bt_bdev_fd = dev->fd;
 	btp->bt_xfile = NULL;
 	btp->flags = 0;
-	if (write_fails) {
-		btp->writes_left = write_fails;
-		btp->flags |= XFS_BUFTARG_INJECT_WRITE_FAIL;
-	}
 	pthread_mutex_init(&btp->lock, NULL);
 
 	btp->bcache = cache_init(xi->bcache_flags, libxfs_bhash_size,
@@ -486,6 +481,52 @@ static char *wf_opts[] = {
 	[WF_RT]			= "rtdev",
 	[WF_MAX_OPTS]		= NULL,
 };
+
+static void
+setup_buftarg_write_error(
+	struct xfs_buftarg	*btp,
+	char			*val)
+{
+	if (!val) {
+		fprintf(stderr, _("write fail requires a parameter\n"));
+		exit(1);
+	}
+	if (!btp)
+		return;
+	btp->writes_left = strtoul(val, NULL, 0);
+	if (btp->writes_left)
+		btp->flags |= XFS_BUFTARG_INJECT_WRITE_FAIL;
+}
+
+static void
+libxfs_setup_write_error_injection(
+	struct xfs_mount	*mp)
+{
+	char			*p = getenv("LIBXFS_DEBUG_WRITE_CRASH");
+
+	/* Simulate utility crash after a certain number of writes. */
+	while (p && *p) {
+		char *val;
+
+		switch (getsubopt(&p, wf_opts, &val)) {
+		case WF_DATA:
+			setup_buftarg_write_error(mp->m_ddev_targp, val);
+			break;
+		case WF_LOG:
+			setup_buftarg_write_error(mp->m_logdev_targp, val);
+			break;
+		case WF_RT:
+			if (mp->m_rtdev_targp == mp->m_ddev_targp)
+				break;
+			setup_buftarg_write_error(mp->m_rtdev_targp, val);
+			break;
+		default:
+			fprintf(stderr, _("unknown write fail type %s\n"), val);
+			exit(1);
+			break;
+		}
+	}
+}
 
 static void
 libxfs_buftarg_reinit(
@@ -529,46 +570,6 @@ libxfs_buftarg_init(
 	struct xfs_mount	*mp,
 	struct libxfs_init	*xi)
 {
-	char			*p = getenv("LIBXFS_DEBUG_WRITE_CRASH");
-	unsigned long		dfail = 0, lfail = 0, rfail = 0;
-
-	/* Simulate utility crash after a certain number of writes. */
-	while (p && *p) {
-		char *val;
-
-		switch (getsubopt(&p, wf_opts, &val)) {
-		case WF_DATA:
-			if (!val) {
-				fprintf(stderr,
-		_("ddev write fail requires a parameter\n"));
-				exit(1);
-			}
-			dfail = strtoul(val, NULL, 0);
-			break;
-		case WF_LOG:
-			if (!val) {
-				fprintf(stderr,
-		_("logdev write fail requires a parameter\n"));
-				exit(1);
-			}
-			lfail = strtoul(val, NULL, 0);
-			break;
-		case WF_RT:
-			if (!val) {
-				fprintf(stderr,
-		_("rtdev write fail requires a parameter\n"));
-				exit(1);
-			}
-			rfail = strtoul(val, NULL, 0);
-			break;
-		default:
-			fprintf(stderr, _("unknown write fail type %s\n"),
-					val);
-			exit(1);
-			break;
-		}
-	}
-
 	/*
 	 * This can happen if the utility called libxfs_buftarg_init manually
 	 * before libxfs_mount, which calls us again.
@@ -581,17 +582,15 @@ libxfs_buftarg_init(
 		return;
 	}
 
-	mp->m_ddev_targp = libxfs_buftarg_alloc(mp, xi, &xi->data, dfail);
+	mp->m_ddev_targp = libxfs_buftarg_alloc(mp, xi, &xi->data);
 	if (!xi->log.dev || xi->log.dev == xi->data.dev)
 		mp->m_logdev_targp = mp->m_ddev_targp;
 	else
-		mp->m_logdev_targp = libxfs_buftarg_alloc(mp, xi, &xi->log,
-				lfail);
+		mp->m_logdev_targp = libxfs_buftarg_alloc(mp, xi, &xi->log);
 	if (!xi->rt.dev || xi->rt.dev == xi->data.dev)
 		mp->m_rtdev_targp = mp->m_ddev_targp;
 	else
-		mp->m_rtdev_targp = libxfs_buftarg_alloc(mp, xi, &xi->rt,
-				rfail);
+		mp->m_rtdev_targp = libxfs_buftarg_alloc(mp, xi, &xi->rt);
 }
 
 /* Compute maximum possible height for per-AG btree types for this fs. */
@@ -740,6 +739,7 @@ libxfs_mount(
 	if (flags & LIBXFS_MOUNT_REPORT_CORRUPTION)
 		xfs_set_reporting_corruption(mp);
 	libxfs_buftarg_init(mp, xi);
+	libxfs_setup_write_error_injection(mp);
 
 	if (xi->data.name)
 		mp->m_fsname = strdup(xi->data.name);
