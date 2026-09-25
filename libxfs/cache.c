@@ -284,11 +284,14 @@ cache_shake(
 /*
  * Allocate a new hash node (updating atomic counter in the process),
  * unless doing so will push us over the maximum cache size.
+ * Return 1 with nodep set on success.
+ * Return 0 and NULL nodep otherwise (cache full, or alloc failure)
  */
-static struct cache_node *
+static int
 cache_node_allocate(
 	struct cache *		cache,
-	cache_key_t		key)
+	cache_key_t		key,
+	struct cache_node **	nodep)
 {
 	unsigned int		nodesfree;
 	struct cache_node *	node;
@@ -302,21 +305,25 @@ cache_node_allocate(
 	}
 	cache->c_misses++;
 	pthread_mutex_unlock(&cache->c_mutex);
-	if (!nodesfree)
-		return NULL;
+	if (!nodesfree) {
+		*nodep = NULL;
+		return 0;
+	}
 	node = cache->alloc(key);
 	if (node == NULL) {	/* uh-oh */
 		pthread_mutex_lock(&cache->c_mutex);
 		cache->c_count--;
 		pthread_mutex_unlock(&cache->c_mutex);
-		return NULL;
+		*nodep = NULL;
+		return 0;
 	}
 	pthread_mutex_init(&node->cn_mutex, NULL);
 	list_head_init(&node->cn_mru);
 	node->cn_count = 1;
 	node->cn_priority = 0;
 	node->cn_old_priority = -1;
-	return node;
+	*nodep = node;
+	return 1;
 }
 
 int
@@ -366,8 +373,8 @@ __cache_node_purge(
  * hit, in which case this will all be over quickly and painlessly.
  * Otherwise, we allocate a new node, taking care not to expand the
  * cache beyond the requested maximum size (shrink it if it would).
- * Returns one if hit in cache, otherwise zero.  A node is _always_
- * returned, however.
+ * Returns zero if hit in cache, one if a new node was allocated.  A node
+ * is always returned.
  */
 int
 cache_node_get(
@@ -457,9 +464,10 @@ next_object:
 		/*
 		 * not found, allocate a new entry
 		 */
-		node = cache_node_allocate(cache, key);
+		cache_node_allocate(cache, key, &node);
 		if (node)
 			break;
+
 		priority = cache_shake(cache, priority, false);
 		/*
 		 * We start at 0; if we free CACHE_SHAKE_COUNT we get
