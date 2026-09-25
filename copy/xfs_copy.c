@@ -141,7 +141,7 @@ check_errors(void)
 
 	for (i = 0; i < num_targets; i++)  {
 		if (target[i].state != INACTIVE) {
-			if (platform_flush_device(target[i].fd, 0)) {
+			if (platform_flush_device(target[i].fd)) {
 				target[i].error = errno;
 				target[i].state = INACTIVE;
 				target[i].err_type = 2;

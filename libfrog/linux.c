@@ -152,14 +152,10 @@ platform_set_blocksize(int fd, char *path, dev_t device, int blocksize,
  */
 int
 platform_flush_device(
-	int		fd,
-	dev_t		device)
+	int		fd)
 {
 	struct stat	st;
 	int		ret;
-
-	if (major(device) == RAMDISK_MAJOR)
-		return 0;
 
 	ret = fsync(fd);
 	if (ret)
@@ -169,9 +165,12 @@ platform_flush_device(
 	if (ret)
 		return ret;
 
-	if (S_ISBLK(st.st_mode))
+	/*
+	 * Historically the ram disk driver destroyed all data when BLKFLSBUF
+	 * was called.  That has been fixed a long time, but still be careful.
+	 */
+	if (S_ISBLK(st.st_mode) && major(st.st_rdev) != RAMDISK_MAJOR)
 		return ioctl(fd, BLKFLSBUF, 0);
-
 	return 0;
 }
 

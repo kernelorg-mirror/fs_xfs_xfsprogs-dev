@@ -1112,8 +1112,10 @@ libxfs_blkdev_issue_flush(
 	if (btp->bt_dev == 0)
 		return 0;
 
-	ret = platform_flush_device(btp->bt_fd, btp->bt_dev);
-	return ret ? -errno : 0;
+	ret = platform_flush_device(btp->bt_fd);
+	if (ret)
+		return -errno;
+	return 0;
 }
 
 /*

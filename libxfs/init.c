@@ -172,7 +172,7 @@ libxfs_device_close(
 {
 	int			ret;
 
-	ret = platform_flush_device(dev->fd, dev->dev);
+	ret = platform_flush_device(dev->fd);
 	if (ret) {
 		ret = -errno;
 		fprintf(stderr,
