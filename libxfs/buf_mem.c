@@ -294,8 +294,8 @@ xmbuf_alloc(
 
 	/* Initialize buffer target */
 	btp->bt_mount = mp;
-	btp->bt_bdev = (dev_t)-1;
-	btp->bt_bdev_fd = -1;
+	btp->bt_dev = (dev_t)-1;
+	btp->bt_fd = -1;
 	btp->bt_xfile = xfile;
 	btp->bcache = cache;
 

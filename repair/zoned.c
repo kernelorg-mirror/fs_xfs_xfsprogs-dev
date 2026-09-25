@@ -50,7 +50,7 @@ void
 check_zones(
 	struct xfs_mount	*mp)
 {
-	int			fd = mp->m_rtdev_targp->bt_bdev_fd;
+	int			fd = mp->m_rtdev_targp->bt_fd;
 	uint64_t		sector = XFS_FSB_TO_BB(mp, mp->m_sb.sb_rtstart);
 	unsigned int		zone_size, zone_capacity;
 	uint64_t		device_size;

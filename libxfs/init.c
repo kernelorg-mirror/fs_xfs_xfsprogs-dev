@@ -457,8 +457,8 @@ libxfs_buftarg_alloc(
 		exit(1);
 	}
 	btp->bt_mount = mp;
-	btp->bt_bdev = dev->dev;
-	btp->bt_bdev_fd = dev->fd;
+	btp->bt_dev = dev->dev;
+	btp->bt_fd = dev->fd;
 	btp->bt_xfile = NULL;
 	btp->flags = 0;
 	pthread_mutex_init(&btp->lock, NULL);
@@ -534,7 +534,7 @@ libxfs_buftarg_reinit(
 	struct xfs_mount	*mp,
 	struct libxfs_init	*xi)
 {
-	if (mp->m_ddev_targp->bt_bdev != xi->data.dev ||
+	if (mp->m_ddev_targp->bt_dev != xi->data.dev ||
 	    mp->m_ddev_targp->bt_mount != mp) {
 		fprintf(stderr,
 			_("%s: bad buftarg reinit, ddev\n"),
@@ -544,7 +544,7 @@ libxfs_buftarg_reinit(
 
 	if (mp->m_logdev_targp != mp->m_ddev_targp) {
 		if ((xi->log.dev && xi->log.dev == xi->data.dev) ||
-		    mp->m_logdev_targp->bt_bdev != xi->log.dev ||
+		    mp->m_logdev_targp->bt_dev != xi->log.dev ||
 		    mp->m_logdev_targp->bt_mount != mp) {
 			fprintf(stderr,
 				_("%s: bad buftarg reinit, logdev\n"),
@@ -554,7 +554,7 @@ libxfs_buftarg_reinit(
 	}
 
 	if (mp->m_rtdev_targp && mp->m_rtdev_targp != mp->m_ddev_targp) {
-		if (mp->m_rtdev_targp->bt_bdev != xi->rt.dev ||
+		if (mp->m_rtdev_targp->bt_dev != xi->rt.dev ||
 		    mp->m_rtdev_targp->bt_mount != mp) {
 			fprintf(stderr,
 				_("%s: bad buftarg reinit, rtdev\n"),

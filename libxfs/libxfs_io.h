@@ -25,8 +25,8 @@ struct xfs_buftarg {
 	struct xfs_mount	*bt_mount;
 	pthread_mutex_t		lock;
 	unsigned long		writes_left;
-	dev_t			bt_bdev;
-	int			bt_bdev_fd;
+	dev_t			bt_dev;
+	int			bt_fd;
 	struct xfile		*bt_xfile;
 	unsigned int		flags;
 	struct cache		*bcache;	/* buffer cache */

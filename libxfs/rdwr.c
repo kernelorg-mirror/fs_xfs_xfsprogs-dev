@@ -62,7 +62,7 @@ static void libxfs_brelse(struct cache_node *node);
 int
 libxfs_device_zero(struct xfs_buftarg *btp, xfs_daddr_t start, uint len)
 {
-	int		fd = btp->bt_bdev_fd;
+	int		fd = btp->bt_fd;
 	xfs_off_t	start_offset, end_offset, offset;
 	ssize_t		zsize, bytes;
 	size_t		len_bytes;
@@ -608,7 +608,7 @@ int
 libxfs_readbufr(struct xfs_buftarg *btp, xfs_daddr_t blkno, struct xfs_buf *bp,
 		int len, int flags)
 {
-	int	fd = btp->bt_bdev_fd;
+	int	fd = btp->bt_fd;
 	int	bytes = BBTOB(len);
 	int	error;
 
@@ -644,7 +644,7 @@ libxfs_readbuf_verify(
 int
 libxfs_readbufr_map(struct xfs_buftarg *btp, struct xfs_buf *bp, int flags)
 {
-	int	fd = btp->bt_bdev_fd;
+	int	fd = btp->bt_fd;
 	int	error = 0;
 	void	*buf;
 	int	i;
@@ -834,7 +834,7 @@ int
 libxfs_bwrite(
 	struct xfs_buf	*bp)
 {
-	int		fd = bp->b_target->bt_bdev_fd;
+	int		fd = bp->b_target->bt_fd;
 
 	/*
 	 * we never write buffers that are marked stale. This indicates they
@@ -1109,10 +1109,10 @@ libxfs_blkdev_issue_flush(
 {
 	int			ret;
 
-	if (btp->bt_bdev == 0)
+	if (btp->bt_dev == 0)
 		return 0;
 
-	ret = platform_flush_device(btp->bt_bdev_fd, btp->bt_bdev);
+	ret = platform_flush_device(btp->bt_fd, btp->bt_dev);
 	return ret ? -errno : 0;
 }
 
