@@ -411,17 +411,16 @@ __cache_lookup(
 	struct cache_node	*cn = NULL;
 	struct cache		*bcache = key->buftarg->bcache;
 	struct xfs_buf		*bp;
+	int			ret;
 
 	*bpp = NULL;
 
-	cache_node_get(bcache, key, &cn);
-	if (!cn)
-		return -ENOMEM;
+	ret = cache_node_get(bcache, key, &cn);
+	if (ret < 0)
+		return ret;
 	bp = container_of(cn, struct xfs_buf, b_node);
 
 	if (use_xfs_buf_lock) {
-		int		ret;
-
 		ret = pthread_mutex_trylock(&bp->b_lock);
 		if (ret) {
 			ASSERT(ret == EAGAIN);

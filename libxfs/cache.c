@@ -285,7 +285,8 @@ cache_shake(
  * Allocate a new hash node (updating atomic counter in the process),
  * unless doing so will push us over the maximum cache size.
  * Return 1 with nodep set on success.
- * Return 0 and NULL nodep otherwise (cache full, or alloc failure)
+ * Return 0 and NULL nodep if the cache is full (caller should shake/expand).
+ * Return -ENOMEM and NULL nodep if the underlying allocation failed.
  */
 static int
 cache_node_allocate(
@@ -315,7 +316,7 @@ cache_node_allocate(
 		cache->c_count--;
 		pthread_mutex_unlock(&cache->c_mutex);
 		*nodep = NULL;
-		return 0;
+		return -ENOMEM;
 	}
 	pthread_mutex_init(&node->cn_mutex, NULL);
 	list_head_init(&node->cn_mru);
@@ -373,8 +374,8 @@ __cache_node_purge(
  * hit, in which case this will all be over quickly and painlessly.
  * Otherwise, we allocate a new node, taking care not to expand the
  * cache beyond the requested maximum size (shrink it if it would).
- * Returns zero if hit in cache, one if a new node was allocated.  A node
- * is always returned.
+ * Returns zero if hit in cache, one if a new node was allocated.  Returns
+ * -ENOMEM if allocation fails after cache shaking is exhausted.
  */
 int
 cache_node_get(
@@ -391,6 +392,7 @@ cache_node_get(
 	unsigned int		hashidx;
 	int			priority = 0;
 	int			purged = 0;
+	int			error = 0;
 
 	hashidx = cache->hash(key, cache->c_hashsize, cache->c_hashshift);
 	hash = cache->c_hash + hashidx;
@@ -475,6 +477,14 @@ next_object:
 		 * If we exceed CACHE_MAX_PRIORITY all slots are full; grow it.
 		 */
 		if (priority > CACHE_MAX_PRIORITY) {
+			/*
+			 * We've shaken every priority level.  If the last
+			 * attempt failed with a real ENOMEM rather than a
+			 * full cache, neither shaking nor growing can help;
+			 * return the error to the caller.
+			 */
+			if (error < 0)
+				return error;
 			priority = 0;
 			cache_expand(cache);
 		}
