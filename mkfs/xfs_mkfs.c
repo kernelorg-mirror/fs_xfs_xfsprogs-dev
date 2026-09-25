@@ -5650,10 +5650,8 @@ prepare_devices(
 			 &sbp->sb_uuid, cfg->sb_feat.log_version,
 			 lsunit, XLOG_FMT, XLOG_INIT_CYCLE, false);
 	/* finally, check we can write the last block in the realtime area */
-	if (mp->m_rtdev_targp->bt_bdev &&
-	    mp->m_rtdev_targp != mp->m_ddev_targp &&
-	    cfg->rtblocks > 0 &&
-	    !xfs_has_zoned(mp)) {
+	if (mp->m_rtdev_targp && mp->m_rtdev_targp != mp->m_ddev_targp &&
+	    cfg->rtblocks > 0 && !xfs_has_zoned(mp)) {
 		buf = alloc_write_buf(mp->m_rtdev_targp,
 				XFS_FSB_TO_BB(mp, cfg->rtblocks - 1LL),
 				BTOBB(cfg->blocksize));

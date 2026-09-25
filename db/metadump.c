@@ -3344,8 +3344,7 @@ write_metadump_v2(
 	uint64_t		addr;
 
 	addr = off;
-	if (type == TYP_LOG &&
-	    mp->m_logdev_targp->bt_bdev != mp->m_ddev_targp->bt_bdev)
+	if (type == TYP_LOG && mp->m_logdev_targp != mp->m_ddev_targp)
 		addr |= XME_ADDR_LOG_DEVICE;
 	else if (type == TYP_RTSB)
 		addr |= XME_ADDR_RT_DEVICE;
@@ -3464,7 +3463,7 @@ metadump_f(
 		return 0;
 	}
 
-	if (mp->m_logdev_targp->bt_bdev != mp->m_ddev_targp->bt_bdev)
+	if (mp->m_logdev_targp != mp->m_ddev_targp)
 		metadump.external_log = true;
 
 	if (metadump.external_log && !version_opt_set)
@@ -3481,7 +3480,7 @@ metadump_f(
 	 * enabled.
 	 */
 	if (xfs_has_realtime(mp) && xfs_has_rtsb(mp)) {
-		if (mp->m_rtdev_targp->bt_bdev) {
+		if (mp->m_rtdev_targp) {
 			metadump.realtime_data = true;
 			if (!version_opt_set)
 				metadump.version = 2;

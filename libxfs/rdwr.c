@@ -171,7 +171,7 @@ libxfs_getrtsb(
 	struct xfs_buf		*bp;
 	int			error;
 
-	if (!mp->m_rtdev_targp->bt_bdev)
+	if (!mp->m_rtdev_targp)
 		return NULL;
 
 	ASSERT(!mp->m_sb.sb_rtstart);
@@ -1028,7 +1028,8 @@ libxfs_bcache_purge(struct xfs_mount *mp)
 		return;
 	cache_purge(mp->m_ddev_targp->bcache);
 	cache_purge(mp->m_logdev_targp->bcache);
-	cache_purge(mp->m_rtdev_targp->bcache);
+	if (mp->m_rtdev_targp)
+		cache_purge(mp->m_rtdev_targp->bcache);
 }
 
 void
@@ -1038,7 +1039,8 @@ libxfs_bcache_flush(struct xfs_mount *mp)
 		return;
 	cache_flush(mp->m_ddev_targp->bcache);
 	cache_flush(mp->m_logdev_targp->bcache);
-	cache_flush(mp->m_rtdev_targp->bcache);
+	if (mp->m_rtdev_targp)
+		cache_flush(mp->m_rtdev_targp->bcache);
 }
 
 int
@@ -1046,7 +1048,8 @@ libxfs_bcache_overflowed(struct xfs_mount *mp)
 {
 	return cache_overflowed(mp->m_ddev_targp->bcache) ||
 		cache_overflowed(mp->m_logdev_targp->bcache) ||
-		cache_overflowed(mp->m_rtdev_targp->bcache);
+		(mp->m_rtdev_targp &&
+		 cache_overflowed(mp->m_rtdev_targp->bcache));
 }
 
 struct cache_operations libxfs_bcache_operations = {
@@ -1185,15 +1188,19 @@ libxfs_log_clear(
 	xfs_daddr_t		end_blk;
 	char			*ptr;
 
-	if (((btp && dptr) || (!btp && !dptr)) ||
-	    (btp && !btp->bt_bdev) || !fs_uuid)
+	if (!fs_uuid)
 		return -EINVAL;
 
-	/* first zero the log */
-	if (btp)
+	if (btp) {
+		if (dptr)
+			return -EINVAL;
+		/* first zero the log */
 		libxfs_device_zero(btp, start, length);
-	else
+	} else {
+		if (!dptr)
+			return -EINVAL;
 		memset(dptr, 0, BBTOB(length));
+	}
 
 	/*
 	 * Initialize the log record length and LSNs. XLOG_INIT_CYCLE is a

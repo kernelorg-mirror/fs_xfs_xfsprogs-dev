@@ -307,7 +307,7 @@ rtmount_init(
 		return -1;
 	}
 
-	if (mp->m_rtdev_targp->bt_bdev == 0 && !xfs_is_debugger(mp)) {
+	if (!mp->m_rtdev_targp && !xfs_is_debugger(mp)) {
 		fprintf(stderr, _("%s: filesystem has a realtime subvolume\n"),
 			progname);
 		return -1;
@@ -541,27 +541,26 @@ libxfs_buftarg_reinit(
 		exit(1);
 	}
 
-	if (!xi->log.dev || xi->log.dev == xi->data.dev) {
-		if (mp->m_logdev_targp != mp->m_ddev_targp) {
+	if (mp->m_logdev_targp != mp->m_ddev_targp) {
+		if ((xi->log.dev && xi->log.dev == xi->data.dev) ||
+		    mp->m_logdev_targp->bt_bdev != xi->log.dev ||
+		    mp->m_logdev_targp->bt_mount != mp) {
 			fprintf(stderr,
-			_("%s: bad buftarg reinit, ldev mismatch\n"),
+				_("%s: bad buftarg reinit, logdev\n"),
 				progname);
 			exit(1);
 		}
-	} else if (mp->m_logdev_targp->bt_bdev != xi->log.dev ||
-		   mp->m_logdev_targp->bt_mount != mp) {
-		fprintf(stderr,
-			_("%s: bad buftarg reinit, logdev\n"),
-			progname);
-		exit(1);
 	}
-	if ((xi->rt.dev || xi->rt.dev == xi->data.dev) &&
-	    (mp->m_rtdev_targp->bt_bdev != xi->rt.dev ||
-	     mp->m_rtdev_targp->bt_mount != mp)) {
-		fprintf(stderr,
-			_("%s: bad buftarg reinit, rtdev\n"),
-			progname);
-		exit(1);
+
+	if (mp->m_rtdev_targp && mp->m_rtdev_targp != mp->m_ddev_targp) {
+		if ((xi->rt.dev && xi->rt.dev == xi->data.dev) ||
+		    mp->m_rtdev_targp->bt_bdev != xi->rt.dev ||
+		    mp->m_rtdev_targp->bt_mount != mp) {
+			fprintf(stderr,
+				_("%s: bad buftarg reinit, rtdev\n"),
+				progname);
+			exit(1);
+		}
 	}
 }
 
@@ -687,7 +686,7 @@ check_many_rtgroups(
 	xfs_daddr_t		d;
 	int			error;
 
-	if (!mp->m_rtdev_targp->bt_bdev) {
+	if (!mp->m_rtdev_targp) {
 		fprintf(stderr, _("%s: no rt device, ignoring rgcount %u\n"),
 				progname, sbp->sb_rgcount);
 		if (!xfs_is_debugger(mp))
@@ -824,8 +823,7 @@ libxfs_mount(
 	} else
 		libxfs_buf_relse(bp);
 
-	if (mp->m_logdev_targp->bt_bdev &&
-	    mp->m_logdev_targp->bt_bdev != mp->m_ddev_targp->bt_bdev) {
+	if (mp->m_logdev_targp != mp->m_ddev_targp) {
 		d = (xfs_daddr_t) XFS_FSB_TO_BB(mp, mp->m_sb.sb_logblocks);
 		if (XFS_BB_TO_FSB(mp, d) != mp->m_sb.sb_logblocks ||
 		    libxfs_buf_read(mp->m_logdev_targp,
@@ -1045,7 +1043,7 @@ libxfs_umount(
 	free(mp->m_fsname);
 	mp->m_fsname = NULL;
 
-	if (mp->m_rtdev_targp != mp->m_ddev_targp)
+	if (mp->m_rtdev_targp && mp->m_rtdev_targp != mp->m_ddev_targp)
 		libxfs_buftarg_free(mp->m_rtdev_targp);
 	if (mp->m_logdev_targp != mp->m_ddev_targp)
 		libxfs_buftarg_free(mp->m_logdev_targp);

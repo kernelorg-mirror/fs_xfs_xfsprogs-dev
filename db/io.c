@@ -651,7 +651,7 @@ set_log_cur(
 	int		ring_flag,
 	bbmap_t		*bbmap)
 {
-	if (mp->m_logdev_targp->bt_bdev == mp->m_ddev_targp->bt_bdev) {
+	if (mp->m_logdev_targp == mp->m_ddev_targp) {
 		fprintf(stderr, "no external log specified\n");
 		exitcode = 1;
 		return;
@@ -668,7 +668,7 @@ set_rt_cur(
 	int		ring_flag,
 	bbmap_t		*bbmap)
 {
-	if (!mp->m_rtdev_targp->bt_bdev) {
+	if (!mp->m_rtdev_targp) {
 		printf(_("realtime device not loaded, use -R.\n"));
 		return ENODEV;
 	}
