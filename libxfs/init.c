@@ -182,7 +182,6 @@ libxfs_device_close(
 	close(dev->fd);
 
 	dev->fd = -1;
-	dev->dev = 0;
 }
 
 /*
