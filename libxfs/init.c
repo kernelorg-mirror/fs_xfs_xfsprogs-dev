@@ -487,6 +487,43 @@ static char *wf_opts[] = {
 	[WF_MAX_OPTS]		= NULL,
 };
 
+static void
+libxfs_buftarg_reinit(
+	struct xfs_mount	*mp,
+	struct libxfs_init	*xi)
+{
+	if (mp->m_ddev_targp->bt_bdev != xi->data.dev ||
+	    mp->m_ddev_targp->bt_mount != mp) {
+		fprintf(stderr,
+			_("%s: bad buftarg reinit, ddev\n"),
+			progname);
+		exit(1);
+	}
+
+	if (!xi->log.dev || xi->log.dev == xi->data.dev) {
+		if (mp->m_logdev_targp != mp->m_ddev_targp) {
+			fprintf(stderr,
+			_("%s: bad buftarg reinit, ldev mismatch\n"),
+				progname);
+			exit(1);
+		}
+	} else if (mp->m_logdev_targp->bt_bdev != xi->log.dev ||
+		   mp->m_logdev_targp->bt_mount != mp) {
+		fprintf(stderr,
+			_("%s: bad buftarg reinit, logdev\n"),
+			progname);
+		exit(1);
+	}
+	if ((xi->rt.dev || xi->rt.dev == xi->data.dev) &&
+	    (mp->m_rtdev_targp->bt_bdev != xi->rt.dev ||
+	     mp->m_rtdev_targp->bt_mount != mp)) {
+		fprintf(stderr,
+			_("%s: bad buftarg reinit, rtdev\n"),
+			progname);
+		exit(1);
+	}
+}
+
 void
 libxfs_buftarg_init(
 	struct xfs_mount	*mp,
@@ -532,37 +569,15 @@ libxfs_buftarg_init(
 		}
 	}
 
+	/*
+	 * This can happen if the utility called libxfs_buftarg_init manually
+	 * before libxfs_mount, which calls us again.
+	 *
+	 * In this case all buftargs should be initialized already, and we just
+	 * ensure the values are sane and match the current mount.
+	 */
 	if (mp->m_ddev_targp) {
-		/* should already have all buftargs initialised */
-		if (mp->m_ddev_targp->bt_bdev != xi->data.dev ||
-		    mp->m_ddev_targp->bt_mount != mp) {
-			fprintf(stderr,
-				_("%s: bad buftarg reinit, ddev\n"),
-				progname);
-			exit(1);
-		}
-		if (!xi->log.dev || xi->log.dev == xi->data.dev) {
-			if (mp->m_logdev_targp != mp->m_ddev_targp) {
-				fprintf(stderr,
-				_("%s: bad buftarg reinit, ldev mismatch\n"),
-					progname);
-				exit(1);
-			}
-		} else if (mp->m_logdev_targp->bt_bdev != xi->log.dev ||
-			   mp->m_logdev_targp->bt_mount != mp) {
-			fprintf(stderr,
-				_("%s: bad buftarg reinit, logdev\n"),
-				progname);
-			exit(1);
-		}
-		if ((xi->rt.dev || xi->rt.dev == xi->data.dev) &&
-		    (mp->m_rtdev_targp->bt_bdev != xi->rt.dev ||
-		     mp->m_rtdev_targp->bt_mount != mp)) {
-			fprintf(stderr,
-				_("%s: bad buftarg reinit, rtdev\n"),
-				progname);
-			exit(1);
-		}
+		libxfs_buftarg_reinit(mp, xi);
 		return;
 	}
 
