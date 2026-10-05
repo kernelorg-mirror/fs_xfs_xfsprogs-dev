@@ -314,16 +314,6 @@ xfs_buf_incore(
 void __xfs_buf_mark_corrupt(struct xfs_buf *bp, xfs_failaddr_t fa);
 #define xfs_buf_mark_corrupt(bp) __xfs_buf_mark_corrupt((bp), __this_address)
 
-/* mount stuff */
-#define xfs_trans_set_sync(tp)		((void) 0)
-#define xfs_trans_buf_set_type(tp, bp, t)	({	\
-	int __t = (t);					\
-	__t = __t; /* no set-but-unused warning */	\
-	tp = tp;  /* no set-but-unused warning */	\
-})
-
-#define xfs_trans_buf_copy_type(dbp, sbp)
-
 static inline void
 xfs_buf_readahead(
 	struct xfs_buftarg	*target,
@@ -356,8 +346,6 @@ xfs_buf_readahead(
 #define xfs_filestream_lookup_ag(ip)		(0)
 #define xfs_filestream_new_ag(ip,ag)		(0)
 #define xfs_filestream_select_ag(...)		(-ENOSYS)
-
-#define xfs_trans_inode_buf(tp, bp)		((void) 0)
 
 #define uuid_copy(s,d)		platform_uuid_copy((s),(d))
 #define uuid_equal(s,d)		(platform_uuid_compare((s),(d)) == 0)

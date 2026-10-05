@@ -47,6 +47,7 @@ HFILES = \
 	xfs_cksum.h \
 	xfs_da_btree.h \
 	xfs_dir2.h \
+	xfs_dir2_priv.h \
 	xfs_errortag.h \
 	xfs_exchmaps.h \
 	xfs_group.h \
@@ -73,7 +74,7 @@ HFILES = \
 	xfs_shared.h \
 	xfs_trans_resv.h \
 	xfs_trans_space.h \
-	xfs_dir2_priv.h \
+	xfs_trans.h \
 	xfs_zones.h \
 	stubs/xfs_buf_mem.h \
 	stubs/xfs_error.h \
@@ -83,7 +84,6 @@ HFILES = \
 	stubs/xfs_mount.h \
 	stubs/xfs_quota.h \
 	stubs/xfs_trace.h \
-	stubs/xfs_trans.h \
 	stubs/xfs_trans_priv.h
 
 CFILES = buf_mem.c \

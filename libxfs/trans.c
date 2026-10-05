@@ -353,6 +353,21 @@ xfs_buf_item_put(
 
 /* from xfs_trans_buf.c */
 
+void
+xfs_trans_buf_set_type(
+	struct xfs_trans	*tp,
+	struct xfs_buf		*bp,
+	enum xfs_blft		type)
+{
+}
+
+void
+xfs_trans_buf_copy_type(
+	struct xfs_buf		*dst_bp,
+	struct xfs_buf		*src_bp)
+{
+}
+
 /*
  * Add the locked buffer to the transaction.
  *
@@ -763,6 +778,13 @@ libxfs_trans_binval(
 	bip->__bli_format.blf_flags |= XFS_BLF_CANCEL;
 	set_bit(XFS_LI_DIRTY, &bip->bli_item.li_flags);
 	tp->t_flags |= XFS_TRANS_DIRTY;
+}
+
+void
+xfs_trans_inode_buf(
+	struct xfs_trans	*tp,
+	struct xfs_buf		*bp)
+{
 }
 
 /*

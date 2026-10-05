@@ -391,6 +391,7 @@
 #define xfs_trans_ordered_buf		libxfs_trans_ordered_buf
 #define xfs_trans_read_buf		libxfs_trans_read_buf
 #define xfs_trans_read_buf_map		libxfs_trans_read_buf_map
+#define xfs_trans_reserve_more		libxfs_trans_reserve_more
 #define xfs_trans_resv_calc		libxfs_trans_resv_calc
 #define xfs_trans_roll_inode		libxfs_trans_roll_inode
 #define xfs_trans_roll			libxfs_trans_roll
