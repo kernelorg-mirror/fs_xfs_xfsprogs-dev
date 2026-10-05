@@ -54,6 +54,9 @@ struct iomap;
 #define unlikely(x) (x)
 #define likely(x) (x)
 
+#define memalloc_nofs_save()		(0)
+#define memalloc_nofs_restore(flags)	do { } while (0)
+
 /*
  * This mirrors the kernel include for xfs_buf.h - it's implicitly included in
  * every files via a similar include in the kernel xfs_linux.h.
