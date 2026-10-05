@@ -37,6 +37,7 @@ HFILES = \
 	xfs_attr_leaf.h \
 	xfs_attr_sf.h \
 	xfs_bit.h \
+	xfs_buf_item.h \
 	xfs_bmap.h \
 	xfs_bmap_btree.h \
 	xfs_btree.h \
@@ -53,6 +54,7 @@ HFILES = \
 	xfs_ialloc_btree.h \
 	xfs_inode_buf.h \
 	xfs_inode_fork.h \
+	xfs_inode_item.h \
 	xfs_inode_util.h \
 	xfs_log_recover.h \
 	xfs_metadir.h \

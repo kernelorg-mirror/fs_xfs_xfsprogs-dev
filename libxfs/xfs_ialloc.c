@@ -20,6 +20,7 @@
 #include "xfs_error.h"
 #include "xfs_bmap.h"
 #include "xfs_trans.h"
+#include "xfs_buf_item.h"
 #include "xfs_trace.h"
 #include "xfs_rmap.h"
 #include "xfs_ag.h"

@@ -16,6 +16,7 @@
 #include "xfs_buf_mem.h"
 #include "xfs_btree_mem.h"
 #include "xfs_ag.h"
+#include "xfs_buf_item.h"
 #include "xfs_trace.h"
 #include "xfs_rtgroup.h"
 

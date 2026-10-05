@@ -14,6 +14,7 @@
 #include "xfs_inode.h"
 #include "xfs_error.h"
 #include "xfs_trans.h"
+#include "xfs_buf_item.h"
 #include "xfs_symlink_remote.h"
 #include "xfs_bit.h"
 #include "xfs_bmap.h"

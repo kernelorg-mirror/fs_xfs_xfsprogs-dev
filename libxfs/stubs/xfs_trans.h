@@ -33,30 +33,6 @@ struct xfs_log_item {
 
 #define XFS_LI_DIRTY	3	/* log item dirty in transaction */
 
-struct xfs_inode_log_item {
-	struct xfs_log_item	ili_item;		/* common portion */
-	struct xfs_inode	*ili_inode;		/* inode pointer */
-	unsigned short		ili_lock_flags;		/* lock flags */
-	unsigned int		ili_dirty_flags;	/* dirty in current tx */
-	unsigned int		ili_last_fields;	/* fields when flushed*/
-	unsigned int		ili_fields;		/* fields to be logged */
-	spinlock_t		ili_lock;
-};
-
- struct xfs_buf_log_item {
-	struct xfs_log_item	bli_item;	/* common item structure */
-	struct xfs_buf		*bli_buf;	/* real buffer pointer */
-	unsigned int		bli_flags;	/* misc flags */
-	unsigned int		bli_recur;	/* recursion count */
-	struct xfs_buf_log_format	__bli_format;	/* in-log header */
-};
-
-#define XFS_BLI_DIRTY			(1<<0)
-#define XFS_BLI_HOLD			(1<<1)
-#define XFS_BLI_STALE			(1<<2)
-#define XFS_BLI_INODE_ALLOC_BUF		(1<<3)
-#define XFS_BLI_ORDERED			(1<<4)
-
 typedef struct xfs_trans {
 	unsigned int		t_log_res;	/* amt of log space resvd */
 	unsigned int		t_log_count;	/* count for perm log res */

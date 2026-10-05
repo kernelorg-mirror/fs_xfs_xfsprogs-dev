@@ -11,10 +11,12 @@
 #include "xfs_log_format.h"
 #include "xfs_trans_resv.h"
 #include "xfs_mount.h"
+#include "xfs_trans.h"
 #include "xfs_inode_buf.h"
 #include "xfs_inode_fork.h"
 #include "xfs_inode.h"
-#include "xfs_trans.h"
+#include "xfs_inode_item.h"
+#include "xfs_buf_item.h"
 #include "xfs_rtbitmap.h"
 #include "xfs_ag.h"
 

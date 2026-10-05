@@ -12,10 +12,12 @@
 #include "xfs_log_format.h"
 #include "xfs_trans_resv.h"
 #include "xfs_mount.h"
+#include "xfs_trans.h"
 #include "xfs_inode_buf.h"
 #include "xfs_inode_fork.h"
 #include "xfs_inode.h"
-#include "xfs_trans.h"
+#include "xfs_inode_item.h"
+#include "xfs_buf_item.h"
 #include "xfs_sb.h"
 #include "xfs_defer.h"
 #include "xfs_trace.h"
@@ -339,7 +341,7 @@ libxfs_trans_cancel(
 	xfs_trans_free(tp);
 }
 
-static void
+void
 xfs_buf_item_put(
 	struct xfs_buf_log_item	*bip)
 {

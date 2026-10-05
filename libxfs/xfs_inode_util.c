@@ -20,7 +20,9 @@
 #include "xfs_error.h"
 #include "xfs_trace.h"
 #include "xfs_ag.h"
+#include "xfs_inode_item.h"
 #include "iunlink.h"
+#include "xfs_inode_item.h"
 
 uint16_t
 xfs_flags2diflags(

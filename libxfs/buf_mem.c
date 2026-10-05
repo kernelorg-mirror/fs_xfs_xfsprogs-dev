@@ -6,6 +6,7 @@
 #include "xfs_platform.h"
 #include "libxfs.h"
 #include "xfs_buf_mem.h"
+#include "xfs_buf_item.h"
 #include <sys/mman.h>
 #include <sys/types.h>
 #include <sys/wait.h>

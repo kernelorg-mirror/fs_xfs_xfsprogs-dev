@@ -20,6 +20,7 @@
 #include "xfs_attr_leaf.h"
 #include "xfs_error.h"
 #include "xfs_trace.h"
+#include "xfs_buf_item.h"
 #include "xfs_errortag.h"
 #include "xfs_health.h"
 
