@@ -40,7 +40,6 @@ struct xfs_inode_log_item {
 	unsigned int		ili_dirty_flags;	/* dirty in current tx */
 	unsigned int		ili_last_fields;	/* fields when flushed*/
 	unsigned int		ili_fields;		/* fields to be logged */
-	unsigned int		ili_fsync_fields;	/* ignored by userspace */
 	spinlock_t		ili_lock;
 };
 
