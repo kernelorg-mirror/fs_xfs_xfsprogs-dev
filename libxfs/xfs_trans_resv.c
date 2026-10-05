@@ -19,6 +19,7 @@
 #include "xfs_trans.h"
 #include "xfs_trans_space.h"
 #include "xfs_rtbitmap.h"
+#include "xfs_log.h"
 #include "xfs_trace.h"
 #include "defer_item.h"
 

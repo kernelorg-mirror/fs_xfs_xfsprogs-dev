@@ -22,6 +22,7 @@
 #include "xfs_trans.h"
 #include "xfs_buf_item.h"
 #include "xfs_trace.h"
+#include "xfs_log.h"
 #include "xfs_rmap.h"
 #include "xfs_ag.h"
 #include "xfs_health.h"

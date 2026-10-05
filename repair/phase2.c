@@ -16,6 +16,7 @@
 #include "scan.h"
 #include "rt.h"
 #include "quotacheck.h"
+#include "xfs_trans_priv.h"
 
 /* workaround craziness in the xlog routines */
 int xlog_recover_do_trans(struct xlog *log, struct xlog_recover *t, int p)

@@ -19,6 +19,7 @@
 #include "xfs_dir2_priv.h"
 #include "xfs_error.h"
 #include "xfs_trace.h"
+#include "xfs_log.h"
 #include "xfs_health.h"
 
 /*

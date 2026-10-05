@@ -79,10 +79,12 @@ HFILES = \
 	stubs/xfs_error.h \
 	stubs/xfs_extent_busy.h \
 	stubs/xfs_inode.h \
+	stubs/xfs_log.h \
 	stubs/xfs_mount.h \
 	stubs/xfs_quota.h \
 	stubs/xfs_trace.h \
-	stubs/xfs_trans.h
+	stubs/xfs_trans.h \
+	stubs/xfs_trans_priv.h
 
 CFILES = buf_mem.c \
 	cache.c \

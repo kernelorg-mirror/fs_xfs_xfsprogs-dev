@@ -52,7 +52,6 @@ typedef struct xfs_trans {
 	struct list_head	t_dfops;	/* deferred operations */
 } xfs_trans_t;
 
-void	xfs_trans_init(struct xfs_mount *);
 int	xfs_trans_roll(struct xfs_trans **);
 
 int	libxfs_trans_alloc(struct xfs_mount *mp, struct xfs_trans_res *resp,
@@ -129,11 +128,5 @@ libxfs_trans_read_buf(
 	DEFINE_SINGLE_BUF_MAP(map, blkno, numblks);
 	return libxfs_trans_read_buf_map(mp, tp, btp, &map, 1, flags, bpp, ops);
 }
-
-#define xfs_log_item_in_current_chkpt(lip)	(false)
-
-/* Contorted mess to make gcc shut up about unused vars. */
-#define xfs_ail_get_push_target(ail)    \
-		((log) == (log) ? NULLCOMMITLSN : NULLCOMMITLSN)
 
 #endif	/* __XFS_TRANS_H__ */

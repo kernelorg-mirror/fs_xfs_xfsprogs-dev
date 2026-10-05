@@ -21,6 +21,7 @@
 #include "xfs_health.h"
 #include "xfs_sb.h"
 #include "xfs_errortag.h"
+#include "xfs_log.h"
 #include "xfs_buf_item.h"
 #include "xfs_extent_busy.h"
 
