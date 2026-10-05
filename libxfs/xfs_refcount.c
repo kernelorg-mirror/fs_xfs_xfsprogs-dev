@@ -24,7 +24,7 @@
 #include "xfs_rmap.h"
 #include "xfs_ag.h"
 #include "xfs_health.h"
-#include "defer_item.h"
+#include "xfs_refcount_item.h"
 #include "xfs_rtgroup.h"
 #include "xfs_rtrefcount_btree.h"
 

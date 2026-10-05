@@ -20,12 +20,10 @@ PKGHFILES = xfs_fs.h \
 	xfs_log_format.h
 
 HFILES = \
-	defer_item.h \
 	libxfs_io.h \
 	libxfs_api_defs.h \
 	listxattr.h \
 	init.h \
-	iunlink.h \
 	xfs_platform.h \
 	linux-err.h \
 	topology.h \
@@ -35,10 +33,12 @@ HFILES = \
 	xfs_alloc.h \
 	xfs_alloc_btree.h \
 	xfs_attr_leaf.h \
+	xfs_attr_item.h \
 	xfs_attr_sf.h \
 	xfs_bit.h \
 	xfs_buf_item.h \
 	xfs_bmap.h \
+	xfs_bmap_item.h \
 	xfs_bmap_btree.h \
 	xfs_btree.h \
 	xfs_btree_mem.h \
@@ -50,13 +50,17 @@ HFILES = \
 	xfs_dir2_priv.h \
 	xfs_errortag.h \
 	xfs_exchmaps.h \
+	xfs_exchmaps_item.h \
+	xfs_extfree_item.h \
 	xfs_group.h \
 	xfs_ialloc.h \
 	xfs_ialloc_btree.h \
+	xfs_icreate_item.h \
 	xfs_inode_buf.h \
 	xfs_inode_fork.h \
 	xfs_inode_item.h \
 	xfs_inode_util.h \
+	xfs_iunlink_item.h \
 	xfs_log_recover.h \
 	xfs_metadir.h \
 	xfs_metafile.h \
@@ -64,9 +68,11 @@ HFILES = \
 	xfs_quota_defs.h \
 	xfs_refcount.h \
 	xfs_refcount_btree.h \
+	xfs_refcount_item.h \
 	xfs_rtrefcount_btree.h \
 	xfs_rmap.h \
 	xfs_rmap_btree.h \
+	xfs_rmap_item.h \
 	xfs_rtbitmap.h \
 	xfs_rtgroup.h \
 	xfs_rtrmap_btree.h \

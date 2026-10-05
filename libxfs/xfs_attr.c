@@ -24,7 +24,7 @@
 #include "xfs_quota.h"
 #include "xfs_trans_space.h"
 #include "xfs_trace.h"
-#include "defer_item.h"
+#include "xfs_attr_item.h"
 #include "xfs_parent.h"
 
 struct kmem_cache		*xfs_attr_intent_cache;

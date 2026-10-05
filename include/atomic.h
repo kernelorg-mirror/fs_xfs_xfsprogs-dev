@@ -18,6 +18,7 @@
 #include <urcu/uatomic.h>
 #include "spinlock.h"
 
+typedef	int32_t	refcount_t;
 typedef	int32_t	atomic_t;
 typedef	int64_t	atomic64_t;
 

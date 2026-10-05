@@ -10,6 +10,10 @@
 #include "output.h"
 #include "libxlog.h"
 #include "logformat.h"
+#include "xfs_extfree_item.h"
+#include "xfs_bmap_item.h"
+#include "xfs_rmap_item.h"
+#include "xfs_refcount_item.h"
 
 #define MAX_LSUNIT	256 * 1024	/* max log buf. size */
 

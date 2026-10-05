@@ -10,15 +10,18 @@ struct xfs_trans;
 struct xfs_inode;
 struct xfs_perag;
 
-static inline struct xfs_inode *
-xfs_iunlink_lookup(struct xfs_perag *pag, xfs_agino_t agino)
-{
-	return NULL;
-}
+/* in memory log item structure */
+struct xfs_iunlink_item {
+	struct xfs_log_item	item;
+	struct xfs_inode	*ip;
+	struct xfs_perag	*pag;
+	xfs_agino_t		next_agino;
+	xfs_agino_t		old_agino;
+};
+
+extern struct kmem_cache *xfs_iunlink_cache;
 
 int xfs_iunlink_log_inode(struct xfs_trans *tp, struct xfs_inode *ip,
 			struct xfs_perag *pag, xfs_agino_t next_agino);
-int xfs_iunlink_reload_next(struct xfs_trans *tp, struct xfs_buf *agibp,
-		xfs_agino_t prev_agino, xfs_agino_t next_agino);
 
 #endif	/* XFS_IUNLINK_ITEM_H */

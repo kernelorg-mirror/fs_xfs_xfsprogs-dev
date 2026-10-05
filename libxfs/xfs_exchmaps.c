@@ -22,7 +22,7 @@
 #include "xfs_error.h"
 #include "xfs_errortag.h"
 #include "xfs_health.h"
-#include "defer_item.h"
+#include "xfs_exchmaps_item.h"
 #include "xfs_da_format.h"
 #include "xfs_da_btree.h"
 #include "xfs_attr_leaf.h"

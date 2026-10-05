@@ -442,4 +442,12 @@ extern void	libxfs_irele(struct xfs_inode *ip);
 #define xfs_inherit_nosymlinks		(false)
 #define xfs_inherit_nodefrag		(false)
 
+static inline struct xfs_inode *
+xfs_iunlink_lookup(struct xfs_perag *pag, xfs_agino_t agino)
+{
+	return NULL;
+}
+int xfs_iunlink_reload_next(struct xfs_trans *tp, struct xfs_buf *agibp,
+		xfs_agino_t prev_agino, xfs_agino_t next_agino);
+
 #endif /* __XFS_INODE_H__ */

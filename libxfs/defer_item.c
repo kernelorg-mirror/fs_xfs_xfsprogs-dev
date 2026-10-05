@@ -25,12 +25,11 @@
 #include "xfs_da_btree.h"
 #include "xfs_attr.h"
 #include "libxfs.h"
-#include "defer_item.h"
 #include "xfs_ag.h"
 #include "xfs_exchmaps.h"
-#include "defer_item.h"
 #include "xfs_group.h"
 #include "xfs_rtgroup.h"
+#include "xfs_attr_item.h"
 
 /* Dummy defer item ops, since we don't do logging. */
 

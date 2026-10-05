@@ -17,16 +17,8 @@
 #include "xfs_inode.h"
 #include "xfs_trans.h"
 #include "xfs_ag.h"
-#include "iunlink.h"
+#include "xfs_iunlink_item.h"
 #include "xfs_trace.h"
-
-/* in memory log item structure */
-struct xfs_iunlink_item {
-	struct xfs_inode	*ip;
-	struct xfs_perag	*pag;
-	xfs_agino_t		next_agino;
-	xfs_agino_t		old_agino;
-};
 
 /*
  * Look up the inode cluster buffer and log the on-disk unlinked inode change

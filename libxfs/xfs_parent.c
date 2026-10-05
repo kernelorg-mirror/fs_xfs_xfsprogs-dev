@@ -25,7 +25,7 @@
 #include "xfs_defer.h"
 #include "xfs_parent.h"
 #include "xfs_trans_space.h"
-#include "defer_item.h"
+#include "xfs_attr_item.h"
 #include "xfs_health.h"
 #include "xfs_attr_leaf.h"
 

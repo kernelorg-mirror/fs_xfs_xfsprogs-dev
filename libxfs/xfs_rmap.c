@@ -24,7 +24,7 @@
 #include "xfs_inode.h"
 #include "xfs_ag.h"
 #include "xfs_health.h"
-#include "defer_item.h"
+#include "xfs_rmap_item.h"
 #include "xfs_rtgroup.h"
 #include "xfs_rtrmap_btree.h"
 

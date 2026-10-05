@@ -19,9 +19,14 @@
 #include "xfs_trans.h"
 #include "xfs_trans_space.h"
 #include "xfs_rtbitmap.h"
+#include "xfs_attr_item.h"
 #include "xfs_log.h"
+#include "xfs_defer.h"
+#include "xfs_bmap_item.h"
+#include "xfs_extfree_item.h"
+#include "xfs_rmap_item.h"
+#include "xfs_refcount_item.h"
 #include "xfs_trace.h"
-#include "defer_item.h"
 
 #define _ALLOC	true
 #define _FREE	false

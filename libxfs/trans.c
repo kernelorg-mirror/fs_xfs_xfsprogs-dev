@@ -1315,3 +1315,15 @@ out_blocks:
 
 	return error;
 }
+
+void
+xfs_icreate_log(
+	struct xfs_trans	*tp,
+	xfs_agnumber_t		agno,
+	xfs_agblock_t		agbno,
+	unsigned int		count,
+	unsigned int		inode_size,
+	xfs_agblock_t		length,
+	unsigned int		generation)
+{
+}
