@@ -71,7 +71,7 @@ static const struct xfs_item_ops xfs_buf_item_ops = {
  * buffer (see xfs_buf_attach_iodone() below), then put the
  * buf log item at the front.
  */
-void
+int
 xfs_buf_item_init(
 	struct xfs_buf		*bp,
 	struct xfs_mount	*mp)
@@ -97,7 +97,7 @@ xfs_buf_item_init(
 				"reused buf item %p for pre-logged buffer %p\n",
 				lip, bp);
 #endif
-			return;
+			return 0;
 		}
 	}
 
@@ -112,8 +112,8 @@ xfs_buf_item_init(
 	bip->__bli_format.blf_blkno = (int64_t)xfs_buf_daddr(bp);
 	bip->__bli_format.blf_len = (unsigned short)bp->b_length;
 	bp->b_log_item = bip;
+	return 0;
 }
-
 
 /*
  * Mark bytes first through last inclusive as dirty in the buf

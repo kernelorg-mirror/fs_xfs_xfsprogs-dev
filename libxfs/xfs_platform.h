@@ -408,7 +408,7 @@ void xfs_trans_del_item(struct xfs_log_item *);
 void xfs_inode_item_init(struct xfs_inode *, struct xfs_mount *);
 
 /* xfs_buf_item.c */
-void xfs_buf_item_init(struct xfs_buf *, struct xfs_mount *);
+int xfs_buf_item_init(struct xfs_buf *, struct xfs_mount *);
 void xfs_buf_item_log(struct xfs_buf_log_item *, uint, uint);
 
 /* xfs_trans_buf.c */
