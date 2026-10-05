@@ -37,32 +37,8 @@
 #ifndef _XFS_PLATFORM_H
 #define _XFS_PLATFORM_H
 
-/* CONFIG_XFS_* must be defined to 1 to work with IS_ENABLED() */
-#define CONFIG_XFS_RT 1
-#define CONFIG_XFS_BTREE_IN_MEM 1
-
-#include "libxfs_api_defs.h"
-#include "platform_defs.h"
-#include "xfs.h"
-
-#include "list.h"
-#include "hlist.h"
-#include "cache.h"
-#include "bitops.h"
-#include "kmem.h"
-#include "libfrog/radix-tree.h"
-#include "libfrog/bitmask.h"
-#include "libfrog/div64.h"
-#include "libfrog/util.h"
-#include "atomic.h"
-#include "spinlock.h"
+#include "libxfs.h"
 #include "linux-err.h"
-
-#include "xfs_types.h"
-#include "xfs_arch.h"
-
-#include "xfs_fs.h"
-#include "libfrog/crc32c.h"
 
 #include <sys/xattr.h>
 
@@ -77,9 +53,6 @@ extern struct kmem_cache *xfs_trans_cache;
 #define IOMAP_F_SHARED				0x04
 #define xfs_bmbt_to_iomap(a, b, c, d, e, f)	((void) 0)
 
-/* CRC stuff, buffer API dependent on it */
-#define crc32c(c,p,l)	crc32c_le((c),(unsigned char const *)(p),(l))
-
 /* fake up kernel's iomap, (not) used in xfs_bmap.[ch] */
 struct iomap {
 	unsigned long long	offset;	/* do not use */
@@ -87,14 +60,6 @@ struct iomap {
 };
 
 #define cancel_delayed_work_sync(work) do { } while(0)
-
-#include "xfs_cksum.h"
-
-/*
- * This mirrors the kernel include for xfs_buf.h - it's implicitly included in
- * every files via a similar include in the kernel xfs_linux.h.
- */
-#include "libxfs_io.h"
 
 /* for all the support code that uses progname in error messages */
 extern char    *progname;
