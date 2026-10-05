@@ -21,7 +21,7 @@ struct xfs_item_ops {
 	int (*iop_precommit)(struct xfs_trans *tp, struct xfs_log_item *lip);
 };
 
-typedef struct xfs_log_item {
+struct xfs_log_item {
 	struct list_head		li_trans;	/* transaction list */
 	xfs_lsn_t			li_lsn;		/* last on-disk lsn */
 	uint				li_type;	/* item type */
@@ -29,12 +29,12 @@ typedef struct xfs_log_item {
 	struct xfs_buf			*li_buf;	/* real buffer pointer */
 	struct list_head		li_bio_list;	/* buffer item list */
 	const struct xfs_item_ops	*li_ops;	/* function list */
-} xfs_log_item_t;
+};
 
 #define XFS_LI_DIRTY	3	/* log item dirty in transaction */
 
 struct xfs_inode_log_item {
-	xfs_log_item_t		ili_item;		/* common portion */
+	struct xfs_log_item	ili_item;		/* common portion */
 	struct xfs_inode	*ili_inode;		/* inode pointer */
 	unsigned short		ili_lock_flags;		/* lock flags */
 	unsigned int		ili_dirty_flags;	/* dirty in current tx */
@@ -43,13 +43,13 @@ struct xfs_inode_log_item {
 	spinlock_t		ili_lock;
 };
 
-typedef struct xfs_buf_log_item {
-	xfs_log_item_t		bli_item;	/* common item structure */
+ struct xfs_buf_log_item {
+	struct xfs_log_item	bli_item;	/* common item structure */
 	struct xfs_buf		*bli_buf;	/* real buffer pointer */
 	unsigned int		bli_flags;	/* misc flags */
 	unsigned int		bli_recur;	/* recursion count */
 	struct xfs_buf_log_format	__bli_format;	/* in-log header */
-} xfs_buf_log_item_t;
+};
 
 #define XFS_BLI_DIRTY			(1<<0)
 #define XFS_BLI_HOLD			(1<<1)

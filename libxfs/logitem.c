@@ -74,10 +74,10 @@ static const struct xfs_item_ops xfs_buf_item_ops = {
 void
 xfs_buf_item_init(
 	struct xfs_buf		*bp,
-	xfs_mount_t		*mp)
+	struct xfs_mount	*mp)
 {
-	xfs_log_item_t		*lip;
-	xfs_buf_log_item_t	*bip;
+	struct xfs_log_item	*lip;
+	struct xfs_buf_log_item	*bip;
 
 #ifdef LI_DEBUG
 	fprintf(stderr, "buf_item_init for buffer %p\n", bp);
@@ -121,7 +121,7 @@ xfs_buf_item_init(
  */
 void
 xfs_buf_item_log(
-	xfs_buf_log_item_t	*bip,
+	struct xfs_buf_log_item	*bip,
 	uint			first,
 	uint			last)
 {

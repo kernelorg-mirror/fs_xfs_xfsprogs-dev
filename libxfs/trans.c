@@ -941,7 +941,7 @@ free_item:
 
 static void
 buf_item_done(
-	xfs_buf_log_item_t	*bip)
+	struct xfs_buf_log_item	*bip)
 {
 	struct xfs_buf		*bp;
 	int			hold;
@@ -972,7 +972,7 @@ trans_committed(
 		xfs_trans_del_item(lip);
 
 		if (lip->li_type == XFS_LI_BUF)
-			buf_item_done((xfs_buf_log_item_t *)lip);
+			buf_item_done((struct xfs_buf_log_item *)lip);
 		else if (lip->li_type == XFS_LI_INODE)
 			inode_item_done((struct xfs_inode_log_item *)lip);
 		else {
@@ -985,7 +985,7 @@ trans_committed(
 
 static void
 buf_item_unlock(
-	xfs_buf_log_item_t	*bip)
+	struct xfs_buf_log_item	*bip)
 {
 	struct xfs_buf		*bp = bip->bli_buf;
 	uint			hold;
@@ -1017,7 +1017,7 @@ xfs_trans_free_items(
 	list_for_each_entry_safe(lip, next, &tp->t_items, li_trans) {
 		xfs_trans_del_item(lip);
 		if (lip->li_type == XFS_LI_BUF)
-			buf_item_unlock((xfs_buf_log_item_t *)lip);
+			buf_item_unlock((struct xfs_buf_log_item *)lip);
 		else if (lip->li_type == XFS_LI_INODE)
 			inode_item_unlock((struct xfs_inode_log_item *)lip);
 		else {
