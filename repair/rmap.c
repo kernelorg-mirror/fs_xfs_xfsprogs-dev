@@ -714,7 +714,8 @@ rmap_commit_agbtree_mappings(
 		struct xfs_owner_info	oinfo = {};
 		struct xfs_perag	*pag;
 
-		error = -libxfs_trans_alloc_rollable(mp, 16, &tp);
+		error = -libxfs_trans_alloc(mp, &M_RES(mp)->tr_itruncate, 16, 0,
+				0, &tp);
 		if (error)
 			goto err_slab;
 
@@ -1952,7 +1953,7 @@ fix_freelist(
 	args.agno = agno;
 	args.alignment = 1;
 	args.pag = libxfs_perag_get(mp, agno);
-	error = -libxfs_trans_alloc_rollable(mp, 0, &tp);
+	error = -libxfs_trans_alloc(mp, &M_RES(mp)->tr_itruncate, 0, 0, 0, &tp);
 	if (error)
 		do_error(_("failed to fix AGFL on AG %d, error %d\n"),
 				agno, error);

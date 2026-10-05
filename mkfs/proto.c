@@ -161,7 +161,8 @@ getres(
 	uint		r;
 
 	for (i = 0, r = MKFS_BLOCKRES(blocks); r >= blocks; r--) {
-		i = -libxfs_trans_alloc_rollable(mp, r, &tp);
+		i = -libxfs_trans_alloc(mp, &M_RES(mp)->tr_itruncate, r, 0, 0,
+			&tp);
 		if (i == 0)
 			return tp;
 	}
@@ -251,7 +252,7 @@ rsvfile(
 	/*
 	 * update the inode timestamp, mode, and prealloc flag bits
 	 */
-	error = -libxfs_trans_alloc_rollable(mp, 0, &tp);
+	error = -libxfs_trans_alloc(mp, &M_RES(mp)->tr_fsyncts, 0, 0, 0, &tp);
 	if (error)
 		fail(_("allocating transaction for a file"), error);
 	libxfs_trans_ijoin(tp, ip, 0);
@@ -1037,7 +1038,8 @@ create_sb_metadata_file(
 	xfs_ino_t		ino;
 	int			error;
 
-	error = -libxfs_trans_alloc_rollable(mp, MKFS_BLOCKRES_INODE, &tp);
+	error = -libxfs_trans_alloc(mp, &M_RES(mp)->tr_create,
+			MKFS_BLOCKRES_INODE, 0, 0, &tp);
 	if (error)
 		res_failed(error);
 

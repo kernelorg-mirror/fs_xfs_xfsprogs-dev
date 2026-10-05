@@ -507,7 +507,8 @@ mk_rtino(
 		libxfs_rtginode_metafile_type(type);
 	int			error;
 
-	error = -libxfs_trans_alloc_rollable(mp, 10, &tp);
+	error = -libxfs_trans_alloc(mp, &M_RES(mp)->tr_itruncate, 10, 0, 0,
+			&tp);
 	if (error)
 		res_failed(error);
 

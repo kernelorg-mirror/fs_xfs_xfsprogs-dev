@@ -5704,7 +5704,8 @@ initialise_ag_freespace(
 	struct xfs_trans	*tp;
 	int			c;
 
-	c = -libxfs_trans_alloc_rollable(mp, worst_freelist, &tp);
+	c = -libxfs_trans_alloc(mp, &M_RES(mp)->tr_itruncate, worst_freelist,
+			0, 0, &tp);
 	if (c)
 		res_failed(c);
 

@@ -610,7 +610,8 @@ inject_lost_extent(
 	xfs_agblock_t		agbno;
 	int			error;
 
-	error = -libxfs_trans_alloc_rollable(mp, 16, &tp);
+	error = -libxfs_trans_alloc(mp, &M_RES(mp)->tr_itruncate, 16, 0, 0,
+			&tp);
 	if (error)
 		return error;
 
