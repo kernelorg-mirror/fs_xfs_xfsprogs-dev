@@ -1,3 +1,13 @@
+xfsprogs-7.2.1 (15 Oct 2026)
+	xfs_healer: fail earlier on non-xfs filesystems (Darrick J. Wong)
+	xfs_healer: correct xfd_ API usage (Darrick J. Wong)
+	man: fix alignment of the rtstart field in ioctl_xfs_fsgeometry.2 (Christoph Hellwig)
+	xfs_quota: fix XFS_GETQSTAT parameter pointer (Darrick J. Wong)
+	mkfs: allow disabling quota flags (Darrick J. Wong)
+	xfs_scrub: terminate systemd services if the sysadmin unmounts (Darrick J. Wong)
+	man/xfs_rtgroup_geometry: add rg_writepointer field description (Wilfred Mallawa)
+	xfs_io: report rg_writepointer in report rg_info() (Wilfred Mallawa)
+
 xfsprogs-7.2.0 (16 Sep 2026)
 	xfs_spaceman: port makecfg to use xfsquotactl (Darrick J. Wong)
 	xfs_quota: open the filesystem mountpoint for quota operations (Darrick J. Wong)
